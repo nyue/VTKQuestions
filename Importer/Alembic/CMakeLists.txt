@@ -4,6 +4,10 @@ add_library(vtkAlembic
   src/vtkAlembicImporter.cxx
   )
 
+if (WIN32)
+   target_compile_definitions(vtkAlembic PUBLIC IOImport_EXPORTS)
+endif()
+
 target_link_libraries(vtkAlembic
   VTK::IOImport
   Alembic::Alembic

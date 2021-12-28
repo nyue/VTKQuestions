@@ -36,7 +36,7 @@
 #include <sstream>
 
 #include <Alembic/AbcGeom/All.h>
-#include <Alembic/AbcCoreHDF5/All.h>
+// #include <Alembic/AbcCoreHDF5/All.h>
 #include <Alembic/AbcCoreOgawa/All.h>
 #include <Alembic/Util/All.h>
 #include <Alembic/Abc/All.h>
