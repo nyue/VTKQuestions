@@ -96,35 +96,12 @@ void vtkAlembicImporter::ReadData()
 
 	Alembic::Abc::IArchive archive = factory.getArchive(this->GetFileName(), core_type);
 
-	switch (core_type)
-	{
-	    case Alembic::AbcCoreFactory::IFactory::kHDF5:
-	        // RENDERER_LOG_INFO("        core type: HDF5");
-	        break;
-	    case Alembic::AbcCoreFactory::IFactory::kOgawa:
-	        // RENDERER_LOG_INFO("        core type: Ogawa");
-	        break;
-	    case Alembic::AbcCoreFactory::IFactory::kLayer:
-	        // RENDERER_LOG_INFO("        core type: Layer");
-	        break;
-	    case Alembic::AbcCoreFactory::IFactory::kUnknown:
-	        // RENDERER_LOG_WARNING("        core type: Unknown");
-	        break;
-	    // assert_otherwise;
-	}
 	Alembic::Abc::IObject top = archive.getTop();
 	size_t top_num_children = top.getNumChildren();
 
 	//   vtkDebugMacro("Done with " << this->GetClassName() << "::" << __FUNCTION__);
 	std::cout <<  top_num_children << std::endl;
 
-  /*
-  this->Impl->Update();
-  if (Impl->GetSuccessParsingFiles())
-  {
-    bindTexturedPolydataToRenderWindow(this->RenderWindow, this->Renderer, Impl);
-  }
-  */
 }
 
 //------------------------------------------------------------------------------
