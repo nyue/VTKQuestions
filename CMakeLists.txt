@@ -5,3 +5,5 @@ project(VTKQuestions)
 find_package(VTK CONFIG REQUIRED)
 
 add_subdirectory(Algorithm)
+add_subdirectory(Importer)
+
