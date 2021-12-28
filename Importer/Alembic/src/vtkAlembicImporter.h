@@ -24,6 +24,8 @@
 #include "vtkSmartPointer.h" // for ivars
 #include <string>            // for string
 
+#include <Alembic/Abc/All.h>
+
 class vtkRenderWindow;
 class vtkRenderer;
 class vtkPolydata;
@@ -65,6 +67,9 @@ protected:
 private:
   vtkAlembicImporter(const vtkAlembicImporter&) = delete;
   void operator=(const vtkAlembicImporter&) = delete;
+
+  void IterateIObject(const Alembic::Abc::IObject &parent,
+          const Alembic::Abc::ObjectHeader &ohead);
 
   std::string alembic_filename;
 };

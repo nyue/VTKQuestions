@@ -39,7 +39,7 @@
 // #include <Alembic/AbcCoreHDF5/All.h>
 #include <Alembic/AbcCoreOgawa/All.h>
 #include <Alembic/Util/All.h>
-#include <Alembic/Abc/All.h>
+// #include <Alembic/Abc/All.h>
 #include <Alembic/AbcCoreAbstract/All.h>
 #include <Alembic/AbcCoreFactory/All.h>
 
@@ -89,6 +89,71 @@ void vtkAlembicImporter::ImportEnd()
 }
 
 //------------------------------------------------------------------------------
+void vtkAlembicImporter::IterateIObject(const Alembic::Abc::IObject &parent,
+        const Alembic::Abc::ObjectHeader &ohead)
+{
+	std::cout << "Parent Full name " << parent.getFullName() << std::endl;
+	std::cout << "ohead Full name " << ohead.getFullName() << std::endl;
+
+	//set this if we should continue traversing
+	    Alembic::Abc::IObject nextParentObject;
+
+	    if ( Alembic::AbcGeom::IXform::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match IXform" << std::endl;
+	        Alembic::AbcGeom::IXform xform( parent, ohead.getName() );
+
+	        nextParentObject = xform;
+
+	    }
+	    else if ( Alembic::AbcGeom::ISubD::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match ISubD" << std::endl;
+	        Alembic::AbcGeom::ISubD subd( parent, ohead.getName() );
+	        nextParentObject = subd;
+
+	    }
+	    else if ( Alembic::AbcGeom::IPolyMesh::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match IPolyMesh" << std::endl;
+	        Alembic::AbcGeom::IPolyMesh polymesh( parent, ohead.getName() );
+	        // ProcessIPolyMesh(polymesh);
+	        nextParentObject = polymesh;
+
+	    }
+	    else if ( Alembic::AbcGeom::INuPatch::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match INuPatch" << std::endl;
+
+	    }
+	    else if ( Alembic::AbcGeom::IPoints::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match IPoints" << std::endl;
+	        Alembic::AbcGeom::IPoints points( parent, ohead.getName() );
+	        // ProcessIPoints(points);
+	        nextParentObject = points;
+	    }
+	    else if ( Alembic::AbcGeom::ICurves::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match ICurves" << std::endl;
+
+	    }
+	    else if ( Alembic::AbcGeom::IFaceSet::matches( ohead ) )
+	    {
+	        std::cout << "iterate_iobject match IFaceSet" << std::endl;
+	        std::cerr << "DOH !" << std::endl;
+	    }
+
+	    // Recursion
+	    if ( nextParentObject.valid() )
+	    {
+	        for ( size_t i = 0; i < nextParentObject.getNumChildren() ; ++i )
+	        {
+	        	IterateIObject( nextParentObject, nextParentObject.getChildHeader( i ));
+	        }
+	    }
+}
+//------------------------------------------------------------------------------
 void vtkAlembicImporter::ReadData()
 {
 	Alembic::AbcCoreFactory::IFactory factory;
@@ -101,6 +166,12 @@ void vtkAlembicImporter::ReadData()
 
 	//   vtkDebugMacro("Done with " << this->GetClassName() << "::" << __FUNCTION__);
 	std::cout <<  top_num_children << std::endl;
+
+    for ( size_t i = 0; i < top.getNumChildren(); ++i )
+    {
+    	IterateIObject( top, top.getChildHeader(i));
+    }
+
 
 }
 
