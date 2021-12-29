@@ -9,8 +9,8 @@ if (WIN32)
 endif()
 
 target_link_libraries(vtkAlembic
-  VTK::IOImport
   Alembic::Alembic
+  ${VTK_LIBRARIES}
   )
 
 include_directories(src)

@@ -26,6 +26,9 @@
 #include "vtkRenderer.h"
 #include "vtkSmartPointer.h"
 #include "vtksys/SystemTools.hxx"
+#include "vtkPoints.h"
+#include "vtkNew.h"
+#include "vtkSphereSource.h"
 
 #include <cctype>
 #include <cstdio>
@@ -143,6 +146,9 @@ void vtkAlembicImporter::ImportEnd()
 //------------------------------------------------------------------------------
 void vtkAlembicImporter::ProcessIPolyMesh(const Alembic::AbcGeom::IPolyMesh& pmesh)
 {
+  vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+  vtkSmartPointer<vtkCellArray> polys = vtkSmartPointer<vtkCellArray>::New();
+  vtkSmartPointer<vtkPolyData> polydata = vtkSmartPointer<vtkPolyData>::New();
 
     Alembic::AbcGeom::IPolyMeshSchema::Sample samp;
     if ( pmesh.getSchema().getNumSamples() > 0 )
@@ -174,6 +180,7 @@ void vtkAlembicImporter::ProcessIPolyMesh(const Alembic::AbcGeom::IPolyMesh& pme
                       << P->get()[i].y << ","
                       << P->get()[i].z << "}"
                       << std::endl;
+            points->InsertNextPoint(P->get()[i].x, P->get()[i].y, P->get()[i].z);
         }
 
         for (size_t i=0;i<indices_size;i++)
@@ -188,6 +195,18 @@ void vtkAlembicImporter::ProcessIPolyMesh(const Alembic::AbcGeom::IPolyMesh& pme
             std::cout << "counts[" << i << "] = {"
                       << counts->get()[i] << "}"
                       << std::endl;
+        }
+
+        size_t face_index = 0;
+        for (size_t i=0;i<counts_size;i++)
+        {
+        	size_t polyface_vertex_count = counts->get()[i];
+            polys->InsertNextCell(polyface_vertex_count);
+            for (size_t j=0;j<polyface_vertex_count;j++)
+            {
+            	printf("face_index = %d\n",face_index);
+                polys->InsertCellPoint(indices->get()[face_index++]);
+            }
         }
 
         const Alembic::AbcGeom::IPolyMeshSchema &ipms = pmesh.getSchema();
@@ -366,7 +385,23 @@ void vtkAlembicImporter::ProcessIPolyMesh(const Alembic::AbcGeom::IPolyMesh& pme
             }
         }
     }
+    polydata->SetPoints(points);
+    polydata->SetPolys(polys);
+    {
 
+  	  // Create a mapper and actor
+  	  vtkNew<vtkPolyDataMapper> polyMapper;
+
+  	  polyMapper->SetInputData(polydata);
+
+  	  vtkNew<vtkActor> polyActor;
+  	polyActor->SetMapper(polyMapper);
+  	  /*
+  	  sphereActor->GetProperty()->SetColor(
+  	      colors->GetColor3d("MistyRose").GetData());
+  	      */
+  	  this->Renderer->AddActor(polyActor);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -453,6 +488,27 @@ void vtkAlembicImporter::ReadData()
     	IterateIObject( top, top.getChildHeader(i));
     }
 
+    if (false){
+    	  // vtkNew<vtkNamedColors> colors;
+
+    	  // Create a sphere
+    	  vtkNew<vtkSphereSource> sphereSource;
+    	  sphereSource->SetCenter(1.0, 0.0, 0.0);
+    	  sphereSource->Update();
+
+    	  // Create a mapper and actor
+    	  vtkNew<vtkPolyDataMapper> sphereMapper;
+    	  sphereMapper->SetInputConnection(sphereSource->GetOutputPort());
+
+    	  vtkNew<vtkActor> sphereActor;
+    	  sphereActor->SetMapper(sphereMapper);
+    	  /*
+    	  sphereActor->GetProperty()->SetColor(
+    	      colors->GetColor3d("MistyRose").GetData());
+    	      */
+    	  this->Renderer->AddActor(sphereActor);
+
+    }
 
 }
 

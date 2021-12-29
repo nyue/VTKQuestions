@@ -22,6 +22,7 @@
 #include "vtkIOImportModule.h" // For export macro
 #include "vtkImporter.h"
 #include "vtkSmartPointer.h" // for ivars
+
 #include <string>            // for string
 
 #include <Alembic/Abc/All.h>
@@ -76,6 +77,8 @@ class VTKIOIMPORT_EXPORT vtkAlembicImporter : public vtkImporter
 						const Alembic::Abc::ObjectHeader &ohead);
 
 	std::string alembic_filename;
+
+
 };
 
 #endif
