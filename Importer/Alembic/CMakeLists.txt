@@ -23,3 +23,33 @@ target_link_libraries(test_vtkAlembicImporter
   vtkAlembic
   VTK::IOImport
   )
+
+# OBJ tests
+add_executable(interactive_vtkOBJImporter
+  tests/interactive_vtkOBJImporter_main.cxx
+  )
+
+target_link_libraries(interactive_vtkOBJImporter
+  PRIVATE ${VTK_LIBRARIES})
+
+# vtk_module_autoinit is needed
+vtk_module_autoinit(
+  TARGETS interactive_vtkOBJImporter
+  MODULES ${VTK_LIBRARIES}
+  )
+
+# Alembic tests
+
+add_executable(interactive_vtkAlembicImporter
+  tests/interactive_vtkAlembicImporter_main.cxx
+  )
+
+target_link_libraries(interactive_vtkAlembicImporter
+  PRIVATE ${VTK_LIBRARIES}
+  vtkAlembic)
+
+# vtk_module_autoinit is needed
+vtk_module_autoinit(
+  TARGETS interactive_vtkAlembicImporter
+  MODULES ${VTK_LIBRARIES}
+  )
