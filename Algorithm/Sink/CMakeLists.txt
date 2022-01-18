@@ -15,5 +15,4 @@ install(TARGETS SinkExample
   bin
   )
 
-install(IMPORTED_RUNTIME_ARTIFACTS SinkExample)
-
+# install(IMPORTED_RUNTIME_ARTIFACTS SinkExample)
