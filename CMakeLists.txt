@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(VTKQuestions)
 
+option(ENABLE_ALEMBIC "Enable Alembic" OFF)
+
 find_package(VTK
   COMPONENTS
   CommonColor
