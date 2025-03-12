@@ -4,6 +4,8 @@ project(VTKQuestions)
 
 option(ENABLE_ALEMBIC "Enable Alembic" OFF)
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
 find_package(VTK
   COMPONENTS
   CommonColor
