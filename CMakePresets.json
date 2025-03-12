@@ -1,0 +1,43 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 25,
+		"patch": 0
+    },
+    "configurePresets": [
+        {
+			"name": "debug",
+			"displayName": "Debug Config",
+			"description": "Debug build using Ninja generator",
+			"generator": "Ninja",
+			"environment": {
+			},
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE" : "Debug",
+				"CMAKE_MODULE_PATH" : "$env{CMAKE_UTIL_PATH};$env{CMAKE_MODULE_PATH}"
+			}
+        },
+        {
+			"name": "ubuntu-debug",
+			"displayName": "Ubuntu Debug Config",
+			"description": "Ubuntu debug build using Ninja generator",
+			"inherits": "debug",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/linux-debug",
+			"environment": {
+			},
+			"cacheVariables": {
+				"VTK_DIR" : "$env{HOME}/systems/VTK/9.4.1-static/lib/cmake/vtk-9.4"
+			}
+        },
+		{
+			"name": "ubuntu22-debug",
+			"displayName": "Ubuntu 22 Debug Config",
+			"description": "Ubuntu 22 debug build using Ninja generator",
+			"inherits": "ubuntu-debug",
+			"cacheVariables": {
+			}
+		}
+    ]
+}
